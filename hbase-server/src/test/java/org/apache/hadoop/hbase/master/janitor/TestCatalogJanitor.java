@@ -82,6 +82,8 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.Order;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Category({ MasterTests.class, MediumTests.class })
 public class TestCatalogJanitor {
@@ -133,6 +135,7 @@ public class TestCatalogJanitor {
   }
 
   @Test
+  @Order(10)
   public void testCleanMerge() throws IOException {
     TableDescriptor td = createTableDescriptorForCurrentMethod();
     // Create regions.
@@ -170,6 +173,7 @@ public class TestCatalogJanitor {
   }
 
   @Test
+  @Order(5)
   public void testDontCleanMergeIfFileSystemException() throws IOException {
     TableDescriptor td = createTableDescriptorForCurrentMethod();
     // Create regions.
@@ -230,6 +234,7 @@ public class TestCatalogJanitor {
    * Test clearing a split parent.
    */
   @Test
+  @Order(8)
   public void testCleanParent() throws IOException, InterruptedException {
     TableDescriptor td = createTableDescriptorForCurrentMethod();
     // Create regions.
@@ -272,6 +277,7 @@ public class TestCatalogJanitor {
    * Make sure parent gets cleaned up even if daughter is cleaned up before it.
    */
   @Test
+  @Order(4)
   public void testParentCleanedEvenIfDaughterGoneFirst() throws IOException, InterruptedException {
     parentWithSpecifiedEndKeyCleanedEvenIfDaughterGoneFirst(this.name.getMethodName(),
       Bytes.toBytes("eee"));
@@ -282,6 +288,7 @@ public class TestCatalogJanitor {
    * it.
    */
   @Test
+  @Order(6)
   public void testLastParentCleanedEvenIfDaughterGoneFirst()
     throws IOException, InterruptedException {
     parentWithSpecifiedEndKeyCleanedEvenIfDaughterGoneFirst(this.name.getMethodName(), new byte[0]);
@@ -390,6 +397,7 @@ public class TestCatalogJanitor {
    * referencing them. This ensures that grandparent regions do not point to deleted parent regions.
    */
   @Test
+  @Order(1)
   public void testScanDoesNotCleanRegionsWithExistingParents() throws Exception {
     TableDescriptor td = createTableDescriptorForCurrentMethod();
     // Create regions: aaa->{lastEndKey}, aaa->ccc, aaa->bbb, bbb->ccc, etc.
@@ -457,6 +465,7 @@ public class TestCatalogJanitor {
    * Test that we correctly archive all the storefiles when a region is deleted
    */
   @Test
+  @Order(3)
   public void testSplitParentFirstComparator() {
     SplitParentFirstComparator comp = new SplitParentFirstComparator();
     TableDescriptor td = createTableDescriptorForCurrentMethod();
@@ -526,6 +535,7 @@ public class TestCatalogJanitor {
   }
 
   @Test
+  @Order(7)
   public void testArchiveOldRegion() throws Exception {
     // Create regions.
     TableDescriptor td = createTableDescriptorForCurrentMethod();
@@ -601,6 +611,7 @@ public class TestCatalogJanitor {
    * already archived files to be timestamped backup
    */
   @Test
+  @Order(9)
   public void testDuplicateHFileResolution() throws Exception {
     TableDescriptor td = createTableDescriptorForCurrentMethod();
 
@@ -661,6 +672,7 @@ public class TestCatalogJanitor {
   }
 
   @Test
+  @Order(2)
   public void testAlreadyRunningStatus() throws Exception {
     int numberOfThreads = 2;
     List<Integer> gcValues = new ArrayList<>();
